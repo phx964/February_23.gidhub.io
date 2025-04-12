@@ -1,0 +1,177 @@
+import random
+import sys
+
+q_main = {
+    "Какая фамилия у Пушкина?" : "пушкин",
+    "Какой мессенджер не заблока ркн?" : "телеграм",
+    "черный симбиот?" : "веном",
+    "сеном" : "векс",
+    "где обманывают детей ": "роблокс"
+}
+
+print("Приветствуем на нашем капитал-шоу 'ПОЛЕ ЧУДЕС'!")
+print("Вам предстоит сыграть один раунд и,"
+      " если повезёт, побороться за супер-приз")
+
+q = random.choice(list(q_main.keys()))
+a = q_main[q]
+
+star_ans = []
+for i in a:
+    star_ans.append('*')
+
+scores = [0, 100, 200, 300, 400, 500, 600, 700, 800, 'next', 'Б']
+s1 = 0
+s2 = 0
+
+gameOver = False
+player = 0
+break_main = False
+
+while not gameOver:
+    #слова ведущего
+    if player % 2 == 0:
+        print('Играет 1 игрок')
+    else:
+        print('Играет 2 игрок')
+    print("Желаете назвать слово целиком?"
+          " Или предпочтёте крутить барабан?")
+    print('Если желаете назвать слово целиком - напишите "да"')
+    if input().lower() == 'да':
+        print("И это слово...")
+        answer = input().lower()
+        if answer == a:
+            print("Ура-ура, вы ответили правильно")
+            print("Ответ:", a)
+            break
+        else:
+            print("Ой, а вы проиграли. Какая незадача")
+            if player % 2 == 0:
+                print("Победил второй игрок")
+                print("Набрано очков:", s2)
+                break_main = True
+            else:
+                print("Победил первый игрок")
+                print("Набрано очков:",s1)
+                break_main = True
+            break
+    else:
+        print("Вращайте барабан!")
+        pl_score = random.choice(scores)
+        if pl_score == 'next':
+            print("Вам выпадает поле", pl_score,
+                  ". Ход переходит другому игроку")
+            player +=1
+            continue
+        if pl_score == 'Б':
+            print("Вам выпадает поле", pl_score,
+                  '. Все набранные очки сгорают')
+            if player % 2 == 0:
+                s1 = 0
+            else:
+                s2 = 0
+            player += 1
+            continue
+        #место под шкатулки
+        print("Вы заработали", pl_score, 'очков')
+        if player % 2 == 0:
+            s1 +=pl_score
+        else:
+            s2 +=pl_score
+        print("Назовите букву...")
+        letter = input()
+        next = False
+        for i in range(len(star_ans)):
+            if letter == a[i]:
+                star_ans[i] = letter
+                next = True
+        if '*' not in star_ans:
+            print("Слово угадано.")
+            if player %2 ==0:
+                print("Победил первый игрок")
+                print("Набрано", s1 ,"очков")
+            else:
+                print("Победил второй игрок")
+                print("Набрано", s2, "очков")
+            break
+        if next:
+            print("Вам доступна дополнительная попытка")
+            print(*star_ans)
+        else:
+            player += 1
+            print(*star_ans)
+
+win_score = 0
+if break_main == False:
+    if player % 2 == 0:
+        print('Победа первого игрока! Ура-ура')
+        print('Набрано очков:', s1)
+        win_score = s1
+    else:
+        print("Победил второй игрок. Ура-ура, но не от всего сердца")
+        print('Набрано очков:', s2)
+        win_score = s2
+else:
+    print("Вы победили, но не убедительно. "
+          "Поэтому сегодня без суперигры")
+    sys.exit()
+
+gifts = {100:'блокнот', 200:'ручка', 300:'пирожок', 400:'фижма',
+         500:'senomvex',600:'вечер с Дуровым во Французской тюрьме',
+         700:'Паровозик, который не смог', 800:'Концерт Бибера',
+         900:'RTX 50090',
+         1000:'Подарок точно не скам от индуса инфа 100500%',
+         1100:'42',1200:'carnage',
+         1300:"Годовой запас хЭ-хэнкали эу, уася"}
+q_final = {"формула воздуха":"senomvex"}
+
+q = random.choice(list(q_final.keys()))
+a = q_final[q]
+
+my_gifts = []
+if win_score == 0:
+    print("У вас нулевой баланс. Вы без подарков и без вопросиков")
+    sys.exit()
+else:
+    for i in list(gifts.keys()):
+        if i <= win_score:
+            print(i,' - ',gifts[i])
+    print("Выбирайте то, что хотите, указав стоимость")
+    my_gifts = []
+    while win_score > 0:
+        num = int(input())
+        print("Вы выбрали:", gifts[num])
+        my_gifts.append(gifts[num])
+        win_score -= num
+        for i in list(gifts.keys()):
+            if i <= win_score:
+                print(i, ' - ', gifts[i])
+    else:
+        print("У вас закончились очки")
+        print("Ваши призы:", *my_gifts)
+
+print("Ты хочешь играть в суперигру? да/нет")
+ans = input().lower()
+if ans == 'нет':
+    print("Ха. тогда все твои призы мои")
+    sys.exit()
+else:
+    print("Игра началась")
+    print("Финальный вопрос", q)
+    star_ans = []
+    for i in a:
+        star_ans.append('*')
+    print(*star_ans)
+    print('вы можете откырть в этом слове: ', len(a)//2+1, 'букв')
+    for i in range(len(a)//2+1):
+        letter = input()
+        for j in range(len(a)):
+            if letter == a[j]:
+                star_ans[j] = letter
+    print(*star_ans)
+    print('Какое слово зашифровоно')
+    ans = input()
+    if ans.lower() == a.lower():
+        print('ура победа призы ваши')
+    else:
+        print('вы проиграли и ниего не заработали')
